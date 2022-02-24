@@ -3,17 +3,27 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Put,
+  Res,
 } from '@nestjs/common';
+
+import { Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 
 @Controller('cats')
 export class CatsController {
+  // @Get()
+  // async findAll(): Promise<string> {
+  //   return 'This action returns all cats but async';
+  // }
+
   @Get()
-  async findAll(): Promise<string> {
+  findAllExpress(@Res({ passthrough: true }) res: Response): string {
+    res.status(HttpStatus.ACCEPTED);
     return 'This action returns all cats but async';
   }
 
