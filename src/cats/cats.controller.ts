@@ -17,10 +17,15 @@ export class CatsController {
     return 'This action adds a new cat';
   }
 
+  // @Get()
+  // @Redirect('http://localhost:3000', 301)
+  // findAll(): string {
+  //   return 'This action returns all cats';
+  // }
+
   @Get()
-  //@Redirect('http://localhost:3000', 301)
-  findAll(): string {
-    return 'This action returns all cats';
+  async findAll(): Promise<string> {
+    return 'This action returns all cats but async';
   }
 
   @Get(':id')
