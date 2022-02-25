@@ -5,7 +5,7 @@ import { Cat } from './interfaces/cat.interface';
 export class CatsService {
   private readonly cats: Cat[] = [];
 
-  create(cat: Cat) {
+  create(cat: Cat): void {
     this.cats.push(cat);
   }
 
