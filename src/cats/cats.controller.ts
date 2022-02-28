@@ -9,13 +9,17 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   // UseFilters,
   ValidationPipe,
 } from '@nestjs/common';
 
 // import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
+// import { ValidationPipe } from 'src/pipes/validation.pipe';
 
+import { Roles } from 'src/decorators/roles.decorator';
 import { ForbiddenException } from 'src/exceptions/forbidden.exception';
+import { RolesGuard } from 'src/guards/auth.guard';
 
 import { LoggingService } from 'src/logger/logging.service';
 
@@ -23,36 +27,22 @@ import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 import { Cat } from './interfaces/cat.interface';
-// import { ValidationPipe } from 'src/pipes/validation.pipe';
 
 @Controller('cats')
-// controller-scoped
-//@UseFilters(HttpExceptionFilter)
+@UseGuards(RolesGuard)
 export class CatsController {
   constructor(
     private catsService: CatsService,
     private loggingService: LoggingService,
   ) {}
 
-  // @Get()
-  // findAllExpress(@Res({ passthrough: true }) res: Response): string {
-  //   res.status(HttpStatus.ACCEPTED);
-  //   return 'This action returns all cats';
-  // }
-
   @Get()
   async findAll(@Query('query') query: string): Promise<Cat[]> {
     this.loggingService.logToConsole('This action returns all cats ' + query);
-    return this.catsService.findAll();
+    return this.catsService.custom();
     // throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     // throw new ForbiddenException();
   }
-
-  // @Get()
-  // findOne(@Query('id', ParseIntPipe) id: string): string {
-  //   this.loggingService.logToConsole(id);
-  //   return `This action returns a #${id} cat`;
-  // }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: string): string {
@@ -61,11 +51,9 @@ export class CatsController {
   }
 
   @Post()
-  // Prefer applying filters by using classes instead of instances when possible. It reduces memory usage since Nest can easily reuse instances of the same class across your entire module.
-  // method-scoped
-  // @UseFilters(HttpExceptionFilter)
+  @Roles('admin')
   async create(
-    @Body(new ValidationPipe()) createCatDto: CreateCatDto,
+    @Body(ValidationPipe) createCatDto: CreateCatDto,
   ): Promise<void> {
     console.log(createCatDto);
     try {
@@ -78,7 +66,7 @@ export class CatsController {
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: string,
-    @Body(new ValidationPipe()) updateCatDto: UpdateCatDto,
+    @Body(ValidationPipe) updateCatDto: UpdateCatDto,
   ): string {
     this.loggingService.logToConsole(id);
     return `This action updates name of #${id} cat to ${updateCatDto.name} from email ${updateCatDto.email}`;
