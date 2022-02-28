@@ -9,10 +9,11 @@ import {
   Post,
   Put,
   Query,
-  UseFilters,
+  // UseFilters,
+  ValidationPipe,
 } from '@nestjs/common';
 
-import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
+// import { HttpExceptionFilter } from 'src/filters/http-exception.filter';
 
 import { ForbiddenException } from 'src/exceptions/forbidden.exception';
 
@@ -22,6 +23,7 @@ import { CatsService } from './cats.service';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 import { Cat } from './interfaces/cat.interface';
+// import { ValidationPipe } from 'src/pipes/validation.pipe';
 
 @Controller('cats')
 // controller-scoped
@@ -61,8 +63,10 @@ export class CatsController {
   @Post()
   // Prefer applying filters by using classes instead of instances when possible. It reduces memory usage since Nest can easily reuse instances of the same class across your entire module.
   // method-scoped
-  @UseFilters(HttpExceptionFilter)
-  async create(@Body() createCatDto: CreateCatDto): Promise<void> {
+  // @UseFilters(HttpExceptionFilter)
+  async create(
+    @Body(new ValidationPipe()) createCatDto: CreateCatDto,
+  ): Promise<void> {
     console.log(createCatDto);
     try {
       return this.catsService.create(createCatDto);
@@ -74,10 +78,10 @@ export class CatsController {
   @Put(':id')
   update(
     @Param('id', ParseIntPipe) id: string,
-    @Body() updateCatDto: UpdateCatDto,
+    @Body(new ValidationPipe()) updateCatDto: UpdateCatDto,
   ): string {
     this.loggingService.logToConsole(id);
-    return `This action updates name of #${id} cat to ${updateCatDto.name}`;
+    return `This action updates name of #${id} cat to ${updateCatDto.name} from email ${updateCatDto.email}`;
   }
 
   @Delete(':id')
