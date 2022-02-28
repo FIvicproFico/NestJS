@@ -9,6 +9,9 @@ import {
   Post,
   Put,
   Query,
+  // Req,
+  // Res,
+  // Next,
   UseGuards,
   // UseFilters,
   ValidationPipe,
@@ -35,6 +38,12 @@ export class CatsController {
     private catsService: CatsService,
     private loggingService: LoggingService,
   ) {}
+
+  // @Get()
+  // findAll(@Req() request: Request): string {
+  //   console.log(request);
+  //   return 'This action returns all cats';
+  // }
 
   @Get()
   async findAll(@Query('query') query: string): Promise<Cat[]> {
