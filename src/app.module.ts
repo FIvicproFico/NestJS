@@ -15,9 +15,10 @@ import { CatsModule } from './cats/cats.module';
 import { CatsController } from './cats/cats.controller';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { MyLoggerModule } from '@app/my-logger';
 
 @Module({
-  imports: [CatsModule],
+  imports: [CatsModule, MyLoggerModule],
   controllers: [AppController],
   providers: [
     AppService,

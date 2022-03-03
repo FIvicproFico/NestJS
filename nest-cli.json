@@ -1,4 +1,18 @@
 {
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "src",
+  "projects": {
+    "my-logger": {
+      "type": "library",
+      "root": "libs/my-logger",
+      "entryFile": "index",
+      "sourceRoot": "libs/my-logger/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/my-logger/tsconfig.lib.json"
+      }
+    }
+  },
+  "compilerOptions": {
+    "webpack": true
+  }
 }
